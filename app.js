@@ -2,6 +2,8 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 
+const Post = require('./models/post');
+
 app.set('view engine', 'ejs');
 
 app.use(
@@ -23,7 +25,14 @@ app.get('/create', function(req, res) {
 });
 
 app.post('/create', function(req, res) {
-  arr.push(req.body.text);
+  // arr.push(req.body.text);
+
+  const { title, body } = req.body;
+  Post.create({
+    title,
+    body
+  }).then(post => console.log(post));
+
   res.redirect('/');
 });
 
