@@ -1,33 +1,16 @@
-var express = require('express');
-var app = express();
-var bodyParser = require('body-parser');
+const app = require('./app');
+const db = require('./database');
+const CONFIG = require('./config');
 
-app.set('view engine', 'ejs');
+db()
+  .then(() => {
+    console.log(`Connect to database`);
 
-app.use(
-  bodyParser.urlencoded({
-    extended: true
+    app.listen(CONFIG.PORT, function() {
+      console.log(`http://localhost:${CONFIG.PORT}/`);
+    });
   })
-);
-
-let arr = ['item1', 'item2', 'item3'];
-
-app.get('/', function(req, res) {
-  res.render('index', {
-    arr: arr
+  .catch((error) => {
+    console.log('error connect'+error);
+    process.exit(1);
   });
-});
-
-app.get('/create', function(req, res) {
-  res.render('create');
-});
-
-app.post('/create', function(req, res) {
-  arr.push(req.body.text);
-
-  res.redirect('/');
-});
-
-app.listen(3000, function() {
-  console.log('Example app listening on port 3000!');
-});
