@@ -12,11 +12,11 @@ app.use(
   })
 );
 
-let arr = ['item1', 'item2', 'item3'];
-
 app.get('/', function(req, res) {
-  res.render('index', {
-    arr: arr
+  Post.find({}).then((post)=>{
+    res.render('index', {
+      arr: post
+    });
   });
 });
 
