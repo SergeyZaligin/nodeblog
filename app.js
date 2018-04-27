@@ -1,7 +1,7 @@
-var express = require('express');
-var app = express();
-var bodyParser = require('body-parser');
-
+const express = require('express');
+const app = express();
+const bodyParser = require('body-parser');
+const path = require('path');
 const Post = require('./models/post');
 
 app.set('view engine', 'ejs');
@@ -11,29 +11,15 @@ app.use(
     extended: true
   })
 );
+app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/', function(req, res) {
-  Post.find({}).then((post)=>{
-    res.render('index', {
-      arr: post
-    });
-  });
-});
+app.use(
+  '/javascripts',
+  express.static(path.join(__dirname, 'node_modules', 'jquery', 'dist'))
+);
 
-app.get('/create', function(req, res) {
-  res.render('create');
-});
-
-app.post('/create', function(req, res) {
-  // arr.push(req.body.text);
-
-  const { title, body } = req.body;
-  Post.create({
-    title,
-    body
-  }).then(post => console.log(post));
-
-  res.redirect('/');
+app.get('/', (req, res) => {
+    res.render('index');
 });
 
 module.exports = app;
